@@ -1,0 +1,29 @@
+- id: acme-product
+  role: acme
+  text: Built a team task manager that kept shared projects and deadlines in one place.
+  tags:
+  - product
+  - full-stack
+  story: acme-product
+  source: Fictional example for layout testing.
+  approved: true
+- id: acme-api
+  role: acme
+  text: Added API validation and integration tests for the task creation and update
+    workflows.
+  tags:
+  - backend
+  - testing
+  story: acme-product
+  source: Fictional example for layout testing.
+  approved: true
+- id: docs-search
+  role: docs
+  text: Created a documentation search demo with citations linking answers to source
+    pages.
+  tags:
+  - search
+  - ai
+  story: docs-search
+  source: Fictional example for layout testing.
+  approved: true

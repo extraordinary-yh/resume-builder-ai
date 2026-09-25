@@ -1,0 +1,6 @@
+based_on: swe
+file_tag: EXAMPLE
+target_tags: [backend, testing]
+order:
+  acme: [acme-product, acme-api]
+notes: Fictional example; replace with the actual rationale for this job.

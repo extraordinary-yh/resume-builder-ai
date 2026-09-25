@@ -1,0 +1,52 @@
+basics:
+  name: Alex Morgan
+  location: Example City
+  email: alex@example.com
+  links:
+  - label: Portfolio
+    url: https://example.com
+summary: Fictional example. Replace every claim with your own evidence.
+agent_notes:
+- All content in this example is fictional.
+roles:
+- id: acme
+  company: Acme Labs (fictional)
+  title: Software Engineer
+  location: Remote
+  dates: 2024 – 2026
+  lead: acme-product
+  bullets:
+  - acme-product
+  - acme-api
+projects:
+- id: docs
+  name: Searchable Docs
+  tagline: Fictional demonstration project
+  dates: '2026'
+  url: https://example.com
+  bullets:
+  - docs-search
+education:
+- degree: B.S. Computer Science
+  school: Example University (fictional)
+skills:
+- label: Languages
+  items:
+  - Python
+  - TypeScript
+- label: Tools
+  items:
+  - React
+  - PostgreSQL
+  - Playwright
+layout:
+  page:
+    width_in: 8.5
+    height_in: 11
+    max_width_in: 8.5
+    max_height_in: 11
+  margin_in: 0.6
+  font_pt: 10
+  line_height: 1.4
+  heading_pt: 12
+  role_pt: 11

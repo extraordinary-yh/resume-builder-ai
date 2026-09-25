@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ r.basics.name }} — Resume</title>
+<style>
+{{ font_css }}
+@page { size: {{ p.page_width_in }}in {{ p.page_height_in }}in; margin: {{ p.margin_in }}in; }
+:root {
+  --font: {{ p.font_pt }}pt; --lh: {{ p.line_height }}; --line-pt: {{ p.line_pt }}pt;
+  --name: {{ p.name_pt }}pt; --contact: {{ p.contact_pt }}pt; --heading: {{ p.heading_pt }}pt; --role: {{ p.role_pt }}pt; --company: {{ p.company_pt }}pt;
+  --sec-before: {{ p.section_before_pt }}pt; --sec-after: {{ p.section_after_pt }}pt; --role-gap: {{ p.role_gap_pt }}pt;
+  --edu-gap: {{ p.edu_gap_pt }}pt; --title-pad: {{ p.title_pad_pt }}pt; --contact-gap: {{ p.contact_gap_pt }}pt; --name-top: {{ p.name_top_pt }}pt;
+  --first-sec-before: {{ p.first_section_before_pt }}pt;
+  --bullet-gap: {{ p.bullet_gap_pt }}pt; --bullet-indent: {{ p.bullet_indent_pt }}pt; --bullet-size: {{ p.bullet_size_pt }}pt;
+}
+html, body { margin: 0; padding: 0; background: #fff; }
+body { font-family: "Merriweather", Georgia, serif; font-weight: 300; font-size: var(--font); line-height: var(--lh); color: #000; font-variant-ligatures: none; -webkit-print-color-adjust: exact; }
+.page { width: {{ content_w }}in; }
+@media screen { body { padding: {{ p.margin_in }}in; } }
+a { color: #0563C1; text-decoration: underline; }
+b { font-weight: 700; }
+/* tech terms: Regular plus a hairline stroke ≈ a medium weight; stroke does not change advance widths, so wraps stay put */
+.tech { font-family: "Merriweather VF", "Merriweather", Georgia, serif; font-weight: {{ p.tech_weight|int }}; }
+.edu .line > span:first-child { font-weight: 400; font-size: var(--company); line-height: 1; }
+h1 { font-size: var(--name); font-weight: 700; margin: var(--name-top) 0 0; text-align: center; line-height: var(--lh); }
+.contact { font-size: var(--contact); margin: 0; padding-top: var(--contact-gap); text-align: center; white-space: nowrap; }
+.contact .ico { width: 8pt; height: 8pt; vertical-align: -1pt; margin-right: 2pt; }
+.contact .sep { display: inline-block; width: 6pt; }
+h2 { font-size: var(--heading); font-weight: 700; margin: var(--sec-before) 0 var(--sec-after); padding-bottom: 1pt; border-bottom: 0.5pt solid #000; line-height: var(--lh); }
+.page > h2:first-of-type { margin-top: var(--first-sec-before); }
+.entry + .entry { margin-top: var(--role-gap); }
+.edu + .edu { margin-top: var(--edu-gap); }
+.role { font-size: var(--role); font-weight: 400; margin: 0; padding-top: var(--title-pad); line-height: {{ p.role_line_height }}; }
+.line { display: flex; justify-content: space-between; align-items: baseline; gap: 8pt; }
+.org { font-weight: 700; font-size: var(--company); line-height: 1; }   /* line-height 1 keeps the line box at body height */
+ul { margin: 0; padding: 0; list-style: none; }
+li { margin: 0 0 var(--bullet-gap); padding-left: var(--bullet-indent); text-indent: calc(-1 * var(--bullet-indent)); }
+li::before { content: "\2022"; display: inline-block; width: var(--bullet-indent); text-indent: 0; font-size: var(--bullet-size); }
+.skills p { margin: 0; }
+.summary { margin: 2pt 0 0; }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>{{ r.basics.name }}</h1>
+<p class="contact">{% for c in contact %}{% if not loop.first %}<span class="sep"></span>{% endif %}{% if c.icon %}<img class="ico" src="{{ c.icon }}" alt="">{% endif %}{{ c.prefix }}{% if c.url %}<a href="{{ c.url }}">{{ c.label }}</a>{% else %}{{ c.label }}{% endif %}{% endfor %}</p>
+{% if r.show_summary and r.summary %}<p class="summary">{{ r.summary }}</p>{% endif %}
+
+<h2>EXPERIENCE</h2>
+{% for s in r.roles %}
+<section class="entry" data-id="{{ s.id }}">
+  <p class="role">{{ s.subheading }}</p>
+  <div class="line"><span class="org">{{ s.heading }}</span><span class="dates">{{ s.dates }}{% if s.location %}, {{ s.location }}{% endif %}</span></div>
+  <ul>{% for b in s.bullets %}<li data-id="{{ b.id }}" data-section="{{ s.id }}">{{ b.text|bold }}</li>{% endfor %}</ul>
+</section>
+{% endfor %}
+
+<h2>Projects</h2>
+{% for s in r.projects %}
+<section class="entry" data-id="{{ s.id }}">
+  <div class="line"><span>{% if s.url %}<a href="{{ s.url }}">{{ s.heading }}</a>{% else %}{{ s.heading }}{% endif %}{% if s.subheading %} — {{ s.subheading }}{% endif %}</span><span class="dates">{{ s.dates }}</span></div>
+  <ul>{% for b in s.bullets %}<li data-id="{{ b.id }}" data-section="{{ s.id }}">{{ b.text|bold }}</li>{% endfor %}</ul>
+</section>
+{% endfor %}
+
+<h2>EDUCATION</h2>
+{% for e in r.education %}
+<div class="edu">
+  <div class="line"><span>{{ e.degree }}</span><span>{{ e.school }}</span></div>
+  {% if e.detail %}<ul><li>{{ e.detail|bold }}</li></ul>{% endif %}
+</div>
+{% endfor %}
+
+<h2>SKILLS &amp; ACTIVITIES</h2>
+<div class="skills">{% for g in r.skills %}<p data-id="skill-{{ loop.index }}" data-section="skills"><span class="lbl">{{ g.label }}</span>: {{ (g["items"]|join(", "))|bold }}</p>{% endfor %}</div>
+</div>
+</body>
+</html>

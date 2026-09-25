@@ -1,0 +1,19 @@
+[project]
+name = "resume-builder-ai"
+version = "0.1.0"
+description = "Evidence-backed resumes: approved bullets, tailored versions, one-page PDF validation"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = ["pyyaml>=6", "jinja2>=3.1", "playwright>=1.47", "pypdf>=4"]
+[project.scripts]
+resumebuilder = "resumebuilder.cli:main"
+[dependency-groups]
+dev = ["pytest>=8"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.hatch.build.targets.wheel]
+packages = ["resumebuilder"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["browser: requires Playwright Chromium"]
