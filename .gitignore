@@ -20,3 +20,7 @@ dist/
 .DS_Store
 *.pem
 *.key
+
+# Learner sessions and coach-only case facts remain private.
+/sessions/
+/coaching/

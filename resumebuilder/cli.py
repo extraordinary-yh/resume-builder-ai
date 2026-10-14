@@ -1,8 +1,6 @@
 """`resumebuilder …` subcommands."""
 from __future__ import annotations
 
-import hashlib
-import json
 import shutil
 from pathlib import Path
 
@@ -16,6 +14,7 @@ from .fit import Bounds, run_fit
 from .measure import LayoutReport
 from .render import Renderer
 from .stories import load_stories, validate_stories
+from .storage import store_in_hub as _store_in_hub
 
 EXIT_DATA, EXIT_FIT, EXIT_BROWSER = 1, 2, 3
 
@@ -61,37 +60,13 @@ def _load(paths: _Paths, args):
 
 
 def _named_copy(pdf: Path, master: dict, overlay: dict | None, version: str | None, tag: str | None = None) -> Path | None:
-    """Copy resume.pdf to <Name>_Resume_<TAG>.pdf next to it (tag = the job overlay's file_tag, else the version).
+    """Copy resume.pdf to the clean <Name>_Resume.pdf attachment name.
     The name is the one the resume carries (the version's `basics.name`, else the master's)."""
     label = tag or version
     if not label:
         return None
     target = pdf.with_name(resume_file_name(master, overlay, label))
     shutil.copy(pdf, target)
-    return target
-
-
-def _store_in_hub(root: Path, pdf: Path, job_id: str, filename: str, resume_sha: str) -> Path:
-    """Keep one job PDF in the hub and a lightweight pointer beside its overlay."""
-    target = root / "Applied Job Resumes" / job_id.replace(":", "-") / filename
-    target.parent.mkdir(parents=True, exist_ok=True)
-    pointer = app_dir(root, job_id) / "resume-location.json"
-    previous = json.loads(pointer.read_text()) if pointer.exists() else {}
-    versions = dict(previous.get("versions") or {})
-    if target.exists() and previous.get("resume_sha") == resume_sha and previous.get("path") == target.relative_to(root).as_posix():
-        pdf.unlink()  # identical resolved content; preserve the existing PDF and its metadata
-    else:
-        if target.exists() and target.read_bytes() != pdf.read_bytes():
-            old_sha = previous.get("resume_sha") or hashlib.sha256(target.read_bytes()).hexdigest()[:8]
-            old = target.with_name(f"{target.stem}_{old_sha}{target.suffix}")
-            if old.exists() and old.read_bytes() != target.read_bytes():
-                raise ResumeDataError(f"conflicting saved resume version at {old}")
-            target.replace(old)
-            versions[old_sha] = old.relative_to(root).as_posix()
-        pdf.replace(target)
-    versions[resume_sha] = target.relative_to(root).as_posix()
-    pointer.parent.mkdir(parents=True, exist_ok=True)
-    pointer.write_text(json.dumps({"path": target.relative_to(root).as_posix(), "resume_sha": resume_sha, "versions": versions}, indent=2) + "\n")
     return target
 
 
@@ -170,7 +145,7 @@ def cmd_resume(args) -> int:
                 if not fit.fitted:
                     for stale in ("resume.pdf", "resume.html", "layout.json"):
                         (Path(out) / stale).unlink(missing_ok=True)
-                    for stale in Path(out).glob("*_Resume_*.pdf") if Path(out).exists() else []:
+                    for stale in Path(out).glob("*_Resume*.pdf") if Path(out).exists() else []:
                         stale.unlink()
                     _print_no_fit(fit)
                     return EXIT_FIT

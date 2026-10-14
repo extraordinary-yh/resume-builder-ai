@@ -214,9 +214,9 @@ def resume_name(master: dict[str, Any], overlay: dict[str, Any] | None = None) -
 
 
 def resume_file_name(master: dict[str, Any], overlay: dict[str, Any] | None, label: str) -> str:
-    """`<Name>_Resume_<LABEL>.pdf`, e.g. Alex_Rivera_Resume_STARTUP.pdf, Alex_Morgan_Resume_SWE.pdf."""
+    """Clean attachment name. Version/company/role labels belong in folders and metadata."""
     stem = "_".join(resume_name(master, overlay).split())
-    return f"{stem}_Resume_{str(label).upper()}.pdf"
+    return f"{stem}_Resume.pdf"
 
 
 def _section(entry: dict[str, Any], kind: str, ids: list[str], bullets: dict[str, Bullet], variants: dict[str, str],
