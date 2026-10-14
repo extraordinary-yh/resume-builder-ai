@@ -18,6 +18,8 @@ Prefer approved bullets. Put new wording in a new bank entry with `approved: fal
 Show the changes for user approval. Never silently approve a bullet. Preserve its meaning and supported metrics.
 Use a job overlay to choose order, approved variants, and target tags; preserve pinned lead bullets.
 
+Keep attachment names as `<Name>_Resume.pdf`; group output by employer and opening. Preserve older distinct versions and any application pointers that share them. For aggregator IDs, set the real employer explicitly in the local pointer.
+
 ## Validate and render
 Run `uv run resumebuilder validate`, then `uv run resumebuilder diff --job company:id`.
 Run `uv run resumebuilder fit --job company:id --write` after approval (or `--drafts` for an explicitly requested draft).

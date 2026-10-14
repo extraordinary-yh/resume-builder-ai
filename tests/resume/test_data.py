@@ -142,9 +142,9 @@ def test_version_basics_override_the_name_and_the_file_name():
     assert resolve(MASTER, BULLETS).basics["name"] == "Alex Morgan" and MASTER["basics"]["name"] == "Alex Morgan"
     assert r.sha() != resolve(MASTER, BULLETS).sha()
     assert resume_name(MASTER, None) == "Alex Morgan" and resume_name(MASTER, startup) == "Alex Rivera"
-    assert resume_file_name(MASTER, None, "swe") == "Alex_Morgan_Resume_SWE.pdf"
-    assert resume_file_name(MASTER, startup, "startup") == "Alex_Rivera_Resume_STARTUP.pdf"
-    assert resume_file_name(MASTER, startup, "ACME") == "Alex_Rivera_Resume_ACME.pdf"
+    assert resume_file_name(MASTER, None, "swe") == "Alex_Morgan_Resume.pdf"
+    assert resume_file_name(MASTER, startup, "startup") == "Alex_Rivera_Resume.pdf"
+    assert resume_file_name(MASTER, startup, "ACME") == "Alex_Rivera_Resume.pdf"
     merged = merge_overlays(startup, {"job_id": "x:1", "based_on": "startup"})
     assert merged["basics"] == {"name": "Alex Rivera"}                                  # a job overlay keeps the version's name
     assert merge_overlays(startup, {"basics": {"name": "Other"}})["basics"] == {"name": "Other"}
